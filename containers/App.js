@@ -16,7 +16,11 @@ var App = React.createClass({
       <div className="row">
 
         <div className="col-md-9">
-          <Leaflet url={this.props.map.url} bounds={this.props.map.bounds} />
+          <Leaflet
+            url={this.props.map.url}
+            bounds={this.props.map.bounds}
+            maxState={this.props.map.maxState}
+            maxAverageState={this.props.map.maxAverageState}/>
         </div>
 
         <div className="col-md-3">
@@ -29,7 +33,11 @@ var App = React.createClass({
             layers={this.props.catalog.layers }
             showExtent={this.props.actions.showExtent}
             showLayer={this.props.actions.showLayer}
-            showLayerWithBreaks={this.props.actions.showLayerWithBreaks} />
+            showLayerWithBreaks={this.props.actions.showLayerWithBreaks}
+            showMaxState={this.props.actions.showMaxState}
+            hideMaxState={this.props.actions.hideMaxState}
+            showMaxAverageState={this.props.actions.showMaxAverageState}
+            hideMaxAverageState={this.props.actions.hideMaxAverageState} />
         </div>
 
       </div>

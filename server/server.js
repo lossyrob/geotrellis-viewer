@@ -18,9 +18,13 @@ app.get("/", function(req, res) {
   res.sendFile(path.resolve('client/index.html'));
 });
 
+app.get("/favicon.ico", function(req, res) {
+  res.sendFile(path.resolve('client/favicon.ico'));
+});
+
 app.listen(port, function(error) {
   if (error) {
-    console.error(error)
+    console.error(error);
   } else {
     console.log("Express server listening on port", port);
   }

@@ -17,7 +17,7 @@ var actions = {
       extent: extent
     };
   },
-  showBounds: function(bounds){
+  showBounds: function(bounds) {
     return {
       type: 'SHOW_BOUNDS',
       bounds: bounds
@@ -67,7 +67,7 @@ var actions = {
 
   showLayerWithBreaks: function(layerUrl, breaksUrl) {
     return dispatch => {
-      console.log("Fetching breaks", breaksUrl)
+      console.log("Fetching breaks", breaksUrl);
       return fetch(breaksUrl)
         .then(
           response => {
@@ -78,6 +78,50 @@ var actions = {
           error => {}
         );
       };
+  },
+  showMaxState: function(url) {
+    return dispatch => {
+      console.log("Fetching max state", url);
+      return fetch(url)
+        .then(
+          response => {
+            response.json().then( geojson => {
+              dispatch({
+                type: 'SHOW_MAX_STATE',
+                geojson: geojson
+              });
+            });
+          },
+          error => {}
+        );
+      };
+  },
+  hideMaxState: function() {
+    return {
+      type: 'HIDE_MAX_STATE'
+    };
+  },
+  showMaxAverageState: function(url) {
+    return dispatch => {
+      console.log("Fetching max average state", url);
+      return fetch(url)
+        .then(
+          response => {
+            response.json().then( geojson => {
+              dispatch({
+                type: 'SHOW_MAX_AVERAGE_STATE',
+                geojson: geojson
+              });
+            });
+          },
+          error => {}
+        );
+      };
+  },
+  hideMaxAverageState: function() {
+    return {
+      type: 'HIDE_MAX_AVERAGE_STATE'
+    };
   }
 };
 

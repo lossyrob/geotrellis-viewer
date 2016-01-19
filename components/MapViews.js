@@ -3,25 +3,35 @@ import React from 'react';
 import _ from 'lodash';
 import { PanelGroup, Panel, Input, Button, ButtonGroup } from 'react-bootstrap';
 
-function updateMap (root, op, layer, t1, t2) { //v = {root, op, layer, time1, time2}
-  return showLayerWithBreaks => {
-    // console.log("Update Map", root, op, layer, t1, t2, (layer && t1) ? "pass" : "fail")
+function updateMap (root, op, layer, t1, t2, showingMaxState, showingMaxAverageState) {
+  return (props) => {
     if ( ! _.isUndefined(layer) && ! _.isUndefined(t1) && ! _.isUndefined(t2) ) {
       // Difference Calculation
       let time1 = layer.times[t1];
       let time2 = layer.times[t2];
       let opc = ((op != "none") && layer.isLandsat) ?  `&operation=${op}` : "";
-      showLayerWithBreaks(
+      props.showLayerWithBreaks(
         `${root}/diff/${layer.name}/{z}/{x}/{y}?time1=${time1}&time2=${time2}${opc}`,
         `${root}/diff/breaks/${layer.name}?time1=${time1}&time2=${time2}${opc}`
       );
+
+      if(showingMaxState) {
+        props.showMaxState(`${root}/maxstate/${layer.name}?time1=${time1}&time2=${time2}`);
+      } else {
+        props.hideMaxState();
+      }
+
+      if(showingMaxAverageState) {
+        props.showMaxAverageState(`${root}/maxaveragestate/${layer.name}?time1=${time1}&time2=${time2}`);
+      } else {
+        props.hideMaxState();
+      }
     } else if (! _.isUndefined(layer) && ! _.isUndefined(t1) ) {
-      //console.log("yes");
       // Single Band Calculation
       let time1 = layer.times[t1];
       let time2 = layer.times[t2];
       let opc = ((op != "none") && layer.isLandsat) ?  `&operation=${op}` : "";
-      showLayerWithBreaks(
+      props.showLayerWithBreaks(
         `${root}/tiles/${layer.name}/{z}/{x}/{y}?time=${time1}${opc}`,
         `${root}/tiles/breaks/${layer.name}?time=${time1}${opc}`
       );
@@ -88,6 +98,18 @@ var MapViews = React.createClass({
     this.setState(newState);
     this.updateMap(newState);
   },
+  handleShowMaxStateChecked: function(e) {
+    let v = e.target.checked || false;
+    let newState = _.merge({}, this.state, {showMaxState: v});
+    this.setState(newState);
+    this.updateMap(newState);
+  },
+  handleShowMaxAverageStateChecked: function(e) {
+    let v = e.target.checked || false;
+    let newState = _.merge({}, this.state, {showMaxAverageState: v});
+    this.setState(newState);
+    this.updateMap(newState);
+  },
   selection: function (state) {
     var layer, time1, time2;
     if (state.layer != undefined && ! _.isEmpty(this.props.layers)) {
@@ -101,9 +123,9 @@ var MapViews = React.createClass({
     let [layer, time1, time2] = this.selection(state);
     console.log("ACTIVE PANE: %s", state.activePane);
     if (state.activePane == 1){
-      updateMap(this.props.rootUrl, state.bandOp, layer, state.time1)(this.props.showLayerWithBreaks);
+      updateMap(this.props.rootUrl, state.bandOp, layer, state.time1)(this.props);
     } else {
-      updateMap(this.props.rootUrl, state.diffOp, layer, state.time1, state.time2)(this.props.showLayerWithBreaks);
+      updateMap(this.props.rootUrl, state.diffOp, layer, state.time1, state.time2, state.showMaxState, state.showMaxAverageState)(this.props);
     }
   },
   componentWillReceiveProps: function (nextProps){
@@ -117,9 +139,9 @@ var MapViews = React.createClass({
       var layer = nextProps.layers[0];
 
       if (this.state.activePane == 1){
-        updateMap(nextProps.rootUrl, this.state.bandOp, layer, 0)(nextProps.showLayerWithBreaks);
+        updateMap(nextProps.rootUrl, this.state.bandOp, layer, 0)(nextProps);
       } else {
-        updateMap(nextProps.rootUrl, this.state.diffOp, layer, 0, 1)(nextProps.showLayerWithBreaks);
+        updateMap(nextProps.rootUrl, this.state.diffOp, layer, 0, 1)(nextProps);
       }
       nextProps.showExtent(layer.extent);
     }
@@ -186,6 +208,9 @@ var MapViews = React.createClass({
             <option value="ndvi">NDVI Change</option>
             <option value="ndwi">NDWI Change</option>
           </Input>
+
+            <Input type="checkbox" label="Show state with max difference" checked={this.state.showMaxState} onChange={this.handleShowMaxStateChecked} />
+            <Input type="checkbox" label="Show state with max average difference" checked={this.state.showMaxAverageState} onChange={this.handleShowMaxAverageStateChecked} />
         </Panel>
       </PanelGroup>
     </div>)

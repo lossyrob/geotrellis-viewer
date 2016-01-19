@@ -14,7 +14,7 @@ var initialState = {
   catalog: {
     layers : []
   }
-}
+};
 
 var store =  require('../redux/store')(initialState);
 

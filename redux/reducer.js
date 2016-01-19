@@ -3,7 +3,7 @@ var reducer = function (state, action) {
     case 'SHOW_LAYER':
       return Object.assign({}, state, {
         map: {
-          url: [action.url],
+          url: [action.url]
         }
       });
 
@@ -21,7 +21,25 @@ var reducer = function (state, action) {
       });
     }
     case 'SHOW_BOUNDS': {
-      return _.merge({}, state, { map: { bounds: action.bounds } })
+      return _.merge({}, state, { map: { bounds: action.bounds } });
+    }
+    case 'SHOW_MAX_STATE': {
+      console.log("SHOW_MAX_STATE");
+      console.log(action.geojson);
+      return _.merge({}, state, { map: { maxState: action.geojson } });
+    }
+    case 'HIDE_MAX_STATE': {
+      console.log("HIDE_MAX_STATE");
+      return _.merge({}, state, { map: { maxState: null } });
+    }
+    case 'SHOW_MAX_AVERAGE_STATE': {
+      console.log("SHOW_MAX_AVERAGE_STATE");
+      console.log(action.geojson);
+      return _.merge({}, state, { map: { maxAverageState: action.geojson } });
+    }
+    case 'HIDE_MAX_AVERAGE_STATE': {
+      console.log("HIDE_MAX_AVERAGE_STATE");
+      return _.merge({}, state, { map: { maxAverageState: null } });
     }
     default:
       return state;
