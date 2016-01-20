@@ -160,6 +160,9 @@ var MapViews = React.createClass({
         return <option value={index} key={index}>{time}</option>;
       });
 
+    let showMaxState = false;
+    let showMaxAverageState = !isLandsat;
+
     return (<div>
       <Panel header={<h3>Layer</h3>}>
         <Input type="select" placeholder="select" value={this.state.layer}
@@ -209,9 +212,17 @@ var MapViews = React.createClass({
             <option value="ndwi">NDWI Change</option>
           </Input>
 
-            <Input type="checkbox" label="Show state with max difference" checked={this.state.showMaxState} onChange={this.handleShowMaxStateChecked} />
-            <Input type="checkbox" label="Show state with max average difference" checked={this.state.showMaxAverageState} onChange={this.handleShowMaxAverageStateChecked} />
+            { showMaxState ?
+              <Input type="checkbox" label="Show state with max difference" checked={this.state.showMaxState} onChange={this.handleShowMaxStateChecked} visibility="hidden"/>
+              : null
+            }
+            { showMaxAverageState ?
+              <Input type="checkbox" label="Show state with max average difference" checked={this.state.showMaxAverageState} onChange={this.handleShowMaxAverageStateChecked} />
+              : null
+            }
+
         </Panel>
+
       </PanelGroup>
     </div>)
   }
