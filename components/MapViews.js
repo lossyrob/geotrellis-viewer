@@ -222,7 +222,38 @@ var MapViews = React.createClass({
             }
 
         </Panel>
+        <Panel header="Layer Change Detection" eventKey="2" id={2}>
+          <Input type="select" label="Time 1" placeholder="select" value={this.state.time1}
+            onChange={ev => this.handleTimeSelect("time1", ev)}>
+            <option disabled>[None]</option>
+            {layerTimes}
+          </Input>
 
+          <Input type="select" label="Time 2" placeholder="select" value={this.state.time2}
+            onChange={ev => this.handleTimeSelect("time2", ev) }>
+            <option disabled>[None]</option>;
+            {layerTimes}
+          </Input>
+
+          <Input type="select" label="Operation" placeholder="select" defaultValue="none"
+              disabled={!isLandsat}
+              value={isLandsat ? this.state.diffOp : "none"}
+              onChange={this.handleDiffOperationSelect}>
+            <option value="none">View</option>
+            <option value="ndvi">NDVI Change</option>
+            <option value="ndwi">NDWI Change</option>
+          </Input>
+
+            { showMaxState ?
+              <Input type="checkbox" label="Show state with max difference" checked={this.state.showMaxState} onChange={this.handleShowMaxStateChecked} visibility="hidden"/>
+              : null
+            }
+            { showMaxAverageState ?
+              <Input type="checkbox" label="Show state with max average difference" checked={this.state.showMaxAverageState} onChange={this.handleShowMaxAverageStateChecked} />
+              : null
+            }
+
+        </Panel>
       </PanelGroup>
     </div>)
   }

@@ -9,7 +9,7 @@ var Leaflet = React.createClass({
       minHeight: "800px", width: "100%"
     };
     let tileLayers = _.map(this.props.url, u => {
-      return <TileLayer url={u} />;
+      return <TileLayer key={1} url={u} />;
     });
 
     let vectorLayers = [];
@@ -18,8 +18,40 @@ var Leaflet = React.createClass({
     }
 
     if(this.props.maxAverageState) {
-      vectorLayers.push(<GeoJson data={this.props.maxAverageState} />);
+      let state = this.props.maxAverageState;
+      vectorLayers.push(
+        <GeoJson data={state}
+        fillOpacity={0.0}
+        color="#333300"
+        weight={3}>
+          <Popup>
+            <div>
+              <p><b>Name:</b> {state.properties.name}</p>
+              <p><b>Average Temperature:</b> {state.properties["Mean Temperature"]} °F</p>
+            </div>
+          </Popup>
+        </GeoJson>
+      );
     }
+
+    if(this.props.stateAverage) {
+      let state = this.props.stateAverage;
+      vectorLayers.push(
+        <GeoJson data={state}
+        fillOpacity={0.0}
+        color="#333300"
+        weight={3}>
+          <Popup>
+            <div>
+              <p><b>Name:</b> {state.properties.name}</p>
+              <p><b>Average Temperature:</b> {state.properties.meanTemp} °F</p>
+            </div>
+          </Popup>
+        </GeoJson>
+      );
+    }
+
+    console.log(vectorLayers);
 
     return (
       <Map center ={[37.062,-121.530]} zoom={8} style={style} bounds={this.props.bounds}>

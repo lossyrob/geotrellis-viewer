@@ -122,6 +122,23 @@ var actions = {
     return {
       type: 'HIDE_MAX_AVERAGE_STATE'
     };
+  },
+  showStateAverage: function(url) {
+    return dispatch => {
+      console.log("Fetching state average", url);
+      return fetch(url)
+        .then(
+          response => {
+            response.json().then( geojson => {
+              dispatch({
+                type: 'SHOW_STATE_AVERAGE',
+                geojson: geojson
+              });
+            });
+          },
+          error => {}
+        );
+      };
   }
 };
 

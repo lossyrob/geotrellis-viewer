@@ -41,6 +41,11 @@ var reducer = function (state, action) {
       console.log("HIDE_MAX_AVERAGE_STATE");
       return _.merge({}, state, { map: { maxAverageState: null } });
     }
+    case 'SHOW_STATE_AVERAGE': {
+      console.log("SHOW_STATE_AVERAGE");
+      console.log(action.geojson);
+      return _.merge({}, state, { map: { stateAverage: action.geojson } });
+    }
     default:
       return state;
   }
